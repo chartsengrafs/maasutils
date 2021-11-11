@@ -1,0 +1,11 @@
+### Feature extraction function for pyspark variable importance
+def ExtractFeatureImp(featureImp, dataset, featuresCol):
+    list_extract = []
+    for i in dataset.schema[featuresCol].metadata["ml_attr"]["attrs"]:
+        list_extract = list_extract + dataset.schema[featuresCol].metadata["ml_attr"]["attrs"][i]
+    varlist = pd.DataFrame(list_extract)
+    varlist['score'] = varlist['idx'].apply(lambda x: featureImp[x])
+    return(varlist.sort_values('score', ascending = False))
+
+##ExtractFeatureImp(model.stages[-1].featureImportances, df, "features").head(100)
+##https://www.timlrx.com/blog/feature-selection-using-feature-importance-score-creating-a-pyspark-estimator
