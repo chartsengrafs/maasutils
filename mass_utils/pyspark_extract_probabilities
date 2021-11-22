@@ -1,0 +1,12 @@
+from pyspark.sql.types import DoubleType
+from pyspark.sql.functions import udf, col
+
+def extract_prob(v):
+    try:
+        return float(v[1])  # Your VectorUDT is of length 2
+    except ValueError:
+        return None
+
+extract_prob_udf = udf(extract_prob, DoubleType())
+
+pred2 = prediction.withColumn("prob_flag", extract_prob_udf(col("probability")))
